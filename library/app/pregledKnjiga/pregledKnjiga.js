@@ -19,6 +19,8 @@ let knjiga2 = new Knjiga (2,'Gospodar na Prstenje',"06.05.2025","",'Prica od mal
 let nizKnjiga = [knjiga1,knjiga2]
 
 ispisiKnjige(nizKnjiga)
+sacuvajArtikalUlokalStorage(nizKnjiga)
+
 
 function ispisiKnjige(nizKnjiga){
     let tabela = document.querySelector('#knjigeBody')
@@ -64,8 +66,26 @@ function ispisiKnjige(nizKnjiga){
             let indexZaBrisanje = nizKnjiga.findIndex(k => k.id === knjiga.id);
             if (indexZaBrisanje !== -1) {
                 nizKnjiga.splice(indexZaBrisanje, 1); 
-                ispisiKnjige(nizKnjiga);  
+                ispisiKnjige(nizKnjiga);
+                sacuvajArtikalUlokalStorage(nizKnjiga) 
             }
         });
 }
 }
+
+function sacuvajArtikalUlokalStorage(nizKnjiga){
+    console.log("Čuvanje u localStorage:", nizKnjiga);
+    localStorage.setItem("sveKnjige",JSON.stringify(nizKnjiga))
+}
+
+function ucitajArtikalIzLokalStorage(){
+    let sacuvaniPodaci = localStorage.getItem("sveKnjige")
+
+    if(sacuvaniPodaci){
+        nizKnjiga = JSON.parse(sacuvaniPodaci)
+        console.log(nizKnjiga)
+        ispisiKnjige(nizKnjiga);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", ucitajArtikalIzLokalStorage);

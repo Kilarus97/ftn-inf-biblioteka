@@ -29,4 +29,33 @@ body {
   color: #0056b3;
 }
 
+#container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 20px;
+  padding-left: 30px;
+  width: 50%;
+}
+#container caption {
+  margin: 20px;
+  font-weight: bold;
+  border: 1px solid #333;
+  padding: 30px;
+  background-color: #333;
+  color: #f4f4f9;
+}
+#container table {
+  border: 1px solid black;
+  padding: 10px;
+}
+#container table th, #container table td {
+  background-color: #333;
+  color: #f4f4f9;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+}
+
 /*# sourceMappingURL=mojeKnjige.css.map */
