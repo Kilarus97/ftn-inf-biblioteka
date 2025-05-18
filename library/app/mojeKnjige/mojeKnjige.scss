@@ -6,7 +6,9 @@
     align-items: flex-start; 
     margin: 20px;
     padding-left: 30px;
-    width: 50%;
+    //Ubacio sam tabelu u isti kontenjer ne treba ovo
+    //width: 50%;
+    gap: 20px; //dodao gap
 
     caption {
         margin: 20px;
@@ -18,6 +20,10 @@
     }
 
     table { 
+        //dodao 2 stila ispod
+        flex: 1;
+        max-width: 50%;
+
         border: 1px solid black;
         padding: 10px;
         

@@ -18,7 +18,19 @@ let knjiga1 = new Knjiga (1,'Yu-Suf-Oh','05.05.2025',
 let nizIznajljenihKnjiga = [knjiga1]
 let nizVracenihKnjiga = []
 
+let knjiga2 = new Knjiga(2, 'Plavi Grad', '07.05.2025',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Books_Flat_Icon_Vector.svg/1024px-Books_Flat_Icon_Vector.svg.png',
+    'Avantura u zaboravljenom gradu.', 3)
+
+let knjiga3 = new Knjiga(3, 'Planine i Mi', '01.03.2024',
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/Book_icon_1.png/768px-Book_icon_1.png',
+    'Putopis kroz snežne planine.', 4)
+
+let nizDostupnihKnjiga = [knjiga2, knjiga3]
+
+
 ispisiKnjige(nizIznajljenihKnjiga)
+ispisiDostupneKnjige(nizDostupnihKnjiga)
 sacuvajArtikalUlokalStorage(nizIznajljenihKnjiga)
 
 
@@ -34,7 +46,7 @@ function ispisiKnjige(nizIznajljenihKnjiga){
         let img = document.createElement('img');
         img.src = knjiga.urlSlike; 
         img.alt = 'Slika se ucitava';
-        img.style.width = '200px'; 
+        img.style.width = '100px'; //smanjio sam jer ne moze stati
         img.style.height = 'auto'; 
         slikaCell.appendChild(img);
     
@@ -56,8 +68,8 @@ function ispisiKnjige(nizIznajljenihKnjiga){
         let iznajmiCell = noviRed.insertCell();
         let iznajmiBtn = document.createElement('button');
         iznajmiBtn.textContent = 'Vrati';
-        iznajmiBtn.style.width = '190px'
-        iznajmiBtn.style.height = '50px'
+        iznajmiBtn.style.width = '80px'  //smanjio sam visinu i sirinu
+        iznajmiBtn.style.height = '40px'
         iznajmiBtn.style.borderRadius = '5px'
         iznajmiBtn.style.backgroundColor = '#0056b3'
         iznajmiCell.appendChild(iznajmiBtn);
@@ -66,13 +78,74 @@ function ispisiKnjige(nizIznajljenihKnjiga){
             let indexZaVracanje = nizIznajljenihKnjiga.findIndex(k => k.id === knjiga.id);
             if (indexZaVracanje !== -1) {
                 nizIznajljenihKnjiga.splice(indexZaVracanje, 1);
-                nizVracenihKnjiga.push(indexZaVracanje)
+                //nizDostupnihKnjiga.push(indexZaVracanje)  Treba da vraca objekat a ne samo index
+
+                nizDostupnihKnjiga.push(knjiga)
                 ispisiKnjige(nizIznajljenihKnjiga);
+                ispisiDostupneKnjige(nizDostupnihKnjiga)
                 sacuvajArtikalUlokalStorage(nizIznajljenihKnjiga)
+                localStorage.setItem("dostupneKnjige", JSON.stringify(nizDostupnihKnjiga));
             }
         });
 }
 }
+
+function ispisiDostupneKnjige(nizDostupnihKnjiga){
+    let tabela = document.querySelector('#dostupneBody')
+    tabela.innerHTML = ''
+
+    for(let knjiga of nizDostupnihKnjiga){
+        let noviRed = tabela.insertRow()
+
+        let slikaCell = noviRed.insertCell()
+        let img = document.createElement('img');
+        img.src = knjiga.urlSlike;
+        img.alt = 'Slika se učitava'
+        img.style.width = '100px'
+        img.style.height = 'auto'
+        slikaCell.appendChild(img)
+
+        let idCell = noviRed.insertCell()
+        idCell.textContent = knjiga.id
+
+        let nazivCell = noviRed.insertCell()
+        nazivCell.textContent = knjiga.naziv
+
+        let datumCell = noviRed.insertCell()
+        datumCell.textContent = knjiga.datum
+
+        let opisCell = noviRed.insertCell()
+        opisCell.textContent = knjiga.opis
+
+        let popularnostCell = noviRed.insertCell()
+        popularnostCell.textContent = '★'.repeat(knjiga.popularnost)
+
+        let iznajmiCell = noviRed.insertCell()
+        let iznajmiBtn = document.createElement('button')
+        iznajmiBtn.textContent = 'Iznajmi'
+        iznajmiBtn.style.width = '80px'
+        iznajmiBtn.style.height = '40px'
+        iznajmiBtn.style.borderRadius = '5px'
+        iznajmiBtn.style.backgroundColor = 'green'
+        iznajmiCell.appendChild(iznajmiBtn);
+
+        iznajmiBtn.addEventListener('click', () => {
+            let indexZaIznajmljivanje = nizDostupnihKnjiga.findIndex(k => k.id === knjiga.id)
+            if (indexZaIznajmljivanje !== -1) {
+                // Uklanjamo iz dostupnih
+                let iznajmljenaKnjiga = nizDostupnihKnjiga.splice(indexZaIznajmljivanje, 1)[0]
+                // Dodajemo u iznajmljene
+                nizIznajljenihKnjiga.push(iznajmljenaKnjiga)
+
+                // Osvježi prikaz
+                ispisiDostupneKnjige(nizDostupnihKnjiga)
+                ispisiKnjige(nizIznajljenihKnjiga)
+                sacuvajArtikalUlokalStorage(nizIznajljenihKnjiga)
+            }
+        })
+    }
+}
+
 
 function sacuvajArtikalUlokalStorage(nizKnjiga){
     console.log("Čuvanje u localStorage:", nizKnjiga);
@@ -97,4 +170,7 @@ function ucitajArtikalIzLokalStorage(){
     }
 }
 
-document.addEventListener("DOMContentLoaded", ucitajArtikalIzLokalStorage);
+document.addEventListener("DOMContentLoaded", function(){
+    ucitajArtikalIzLokalStorage()
+
+});
