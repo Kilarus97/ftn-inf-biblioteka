@@ -35,11 +35,11 @@ body {
   align-items: flex-start;
   margin: 20px;
   padding-left: 30px;
-  width: 60%;
 }
 #container table {
   border: 1px solid black;
   padding: 10px;
+  width: 60%;
 }
 #container table th, #container table td {
   background-color: #333;
@@ -48,6 +48,38 @@ body {
   border-radius: 5px;
   padding: 10px;
   text-align: center;
+}
+#container #formWrapper {
+  border: 2px solid black;
+  border-radius: 20px;
+  width: 30%;
+  padding: 10px;
+  background-color: #333;
+  color: #f4f4f9;
+  margin-left: 30px;
+}
+#container #formWrapper #forma label {
+  display: inline-block;
+  width: 100px;
+}
+#container #formWrapper #forma input {
+  display: inline-block;
+  width: 320px;
+  border: none;
+  border-bottom: 1px solid black;
+  outline: none;
+}
+#container #formWrapper #forma #glavniLabel {
+  display: block;
+  text-align: center;
+  margin: 0 auto 15px auto;
+  font-size: 18px;
+  font-weight: bold;
+}
+#container #formWrapper #dodaj {
+  float: right;
+  margin-top: 5px;
+  padding: 2px 8px;
 }
 
 /*# sourceMappingURL=pregledKnjiga.css.map */
