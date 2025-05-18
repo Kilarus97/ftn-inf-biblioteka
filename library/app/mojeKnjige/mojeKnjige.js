@@ -29,9 +29,9 @@ let knjiga3 = new Knjiga(3, 'Planine i Mi', '01.03.2024',
 let nizDostupnihKnjiga = [knjiga2, knjiga3]
 
 
-ispisiKnjige(nizIznajljenihKnjiga)
-ispisiDostupneKnjige(nizDostupnihKnjiga)
-sacuvajArtikalUlokalStorage(nizIznajljenihKnjiga)
+//ispisiKnjige(nizIznajljenihKnjiga)
+//ispisiDostupneKnjige(nizDostupnihKnjiga)
+//sacuvajArtikalUlokalStorage(nizIznajljenihKnjiga)
 
 
 function ispisiKnjige(nizIznajljenihKnjiga){
@@ -147,30 +147,63 @@ function ispisiDostupneKnjige(nizDostupnihKnjiga){
 }
 
 
-function sacuvajArtikalUlokalStorage(nizKnjiga){
+    function sacuvajArtikalUlokalStorage(nizKnjiga){
     console.log("Čuvanje u localStorage:", nizKnjiga);
     localStorage.setItem("iznajmljeneKnjige",JSON.stringify(nizIznajljenihKnjiga))
-}
+    }
 
 function ucitajArtikalIzLokalStorage(){
-    let sacuvaniPodaci = localStorage.getItem("sveKnjige")
-    let sacuvaniPodaci2 = localStorage.getItem("iznajmljeneKnjige")
-
-    if(sacuvaniPodaci && sacuvaniPodaci2){
+        let sacuvaniPodaci = localStorage.getItem("sveKnjige")
+        let sacuvaniPodaci2 = localStorage.getItem("iznajmljeneKnjige")
+        //kod ispod cu malo optimizovati da ne duplira knjige sa prelaskom stranica
+    if(sacuvaniPodaci){
         let nizKnjiga = JSON.parse(sacuvaniPodaci)
-        nizIznajljenihKnjiga = JSON.parse(sacuvaniPodaci2)
-        for(let knjiga of nizIznajljenihKnjiga) {
-            for (let i = 0 ; i < nizKnjiga.length; i++) {
-                if (knjiga.id !== nizKnjiga[i].id) {
-                    nizVracenihKnjiga.push(nizKnjiga[i])
+        let iznajmljeneKnjige = []
+
+        if (sacuvaniPodaci2){
+        iznajmljeneKnjige= JSON.parse(sacuvaniPodaci2)
+        }
+
+        nizIznajljenihKnjiga = iznajmljeneKnjige
+        nizDostupnihKnjiga = []
+
+        for (let i = 0; i < nizKnjiga.length; i++) {
+            let postoji = false
+
+            for (let j = 0; j < iznajmljeneKnjige.length; j++) {
+                if (nizKnjiga[i].id === iznajmljeneKnjige[j].id) {
+                    postoji = true
+                    break;
                 }
             }
+
+            if (!postoji) {
+                nizDostupnihKnjiga.push(nizKnjiga[i]);
+            }
         }
+
         ispisiKnjige(nizIznajljenihKnjiga);
+        ispisiDostupneKnjige(nizDostupnihKnjiga);
+    } 
+    // primjetio sam problem kada ucitam prvo ovu stranicu nima renderovanja tabela zato cu dodati ovo.
+    else {
+        let knjiga1 = new Knjiga(1, 'Yu-Suf-Oh', '05.05.2025',
+        'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1b0de984-6bc3-4839-9fbe-8a10342a9482/dfz9ajs-83811b0f-4567-41cd-ac8f-1bb87696a964.jpg/v1/fit/w_828,h_1210,q_70,strp/sibirski_plavac_by_yusufohkarte_dfz9ajs-414w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MTg2OSIsInBhdGgiOiJcL2ZcLzFiMGRlOTg0LTZiYzMtNDgzOS05ZmJlLThhMTAzNDJhOTQ4MlwvZGZ6OWFqcy04MzgxMWIwZi00NTY3LTQxY2QtYWM4Zi0xYmI4NzY5NmE5NjQuanBnIiwid2lkdGgiOiI8PTEyODAifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.ryQcboNgW_DQK40kANi5wd02y-RUktUCQia09pmjz5U',
+       'Legenda Sibirskog plavca i Kapetana Dragasevica', 5)
+
+        let knjiga2 = new Knjiga(2, 'Gospodar na Prstenje', "06.05.2025", '',
+       'Prica od malechki frodo kako gi se usunjava u Mordor', 4)
+
+        let nizKnjiga = [knjiga1, knjiga2]
+        localStorage.setItem("sveKnjige", JSON.stringify(nizKnjiga))
+        nizDostupnihKnjiga = nizKnjiga   
+        nizIznajljenihKnjiga = []             
+
+        ispisiKnjige(nizIznajljenihKnjiga) 
+        ispisiDostupneKnjige(nizDostupnihKnjiga)
     }
 }
 
-document.addEventListener("DOMContentLoaded", function(){
+    document.addEventListener("DOMContentLoaded", function(){
     ucitajArtikalIzLokalStorage()
-
 });
